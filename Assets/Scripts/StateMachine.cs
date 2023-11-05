@@ -4,7 +4,7 @@ using UnityEngine;
 
 public enum StateType
 {
-    JumpState, GroundState, PatrolState, AggressiveState
+    NullState, JumpState, GroundState, PatrolState, AggressiveState
 }
 
 public class StateMachine
@@ -15,7 +15,7 @@ public class StateMachine
     public void Initialize(StateType stateType, State startState)
     {
         StateList = new State[System.Enum.GetValues(typeof(StateType)).Length];
-        
+
         StateList[(int)stateType] = startState;
 
         CurrentPlayerState = startState;
@@ -29,13 +29,27 @@ public class StateMachine
 
     public void SwitchState(StateType stateType)
     {
-        CurrentPlayerState.Exit();
-        CurrentPlayerState = StateList[(int)stateType];
-        CurrentPlayerState.Enter();
+        try
+        {
+            CurrentPlayerState.Exit();
+            CurrentPlayerState = StateList[(int)stateType];
+            CurrentPlayerState.Enter();
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogException(e);
+        }
     }
 
     public void Update()
     {
-        CurrentPlayerState.Update();
+        try
+        {
+            CurrentPlayerState.Update();
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogException(e);
+        }
     }
 }

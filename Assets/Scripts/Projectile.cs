@@ -22,6 +22,10 @@ public class Projectile : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         Instantiate(impact, collision.GetContact(0).point, Quaternion.identity);
+
+        IDamageable damageable = collision.transform.GetComponent<IDamageable>();
+        if (damageable != null) damageable.TakeDamage();
+
         Destroy(gameObject);
     }
 }

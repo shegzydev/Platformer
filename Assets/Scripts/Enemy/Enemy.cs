@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Enemy : FSMEntity, IDamageable
 {
@@ -8,25 +9,27 @@ public class Enemy : FSMEntity, IDamageable
     public EnemyPatrolState PatrolState;
     public EnemyAggressiveState AggressiveState;
 
-    //Patrol Variables
+    //AggresiveVariables
     public float FarTriggerDistance;
     public float NearTriggerDistance;
-
     public float attackDistance;
 
+    //Patrol Variables
     public float PatrolDistance;
 
-    //
-
     public Vector3[] PatrolPoints;
-
     public LayerMask playerLayer;
-
     public Transform player;
 
-    public override void OnStart()
+    [Header("Health")]
+    public Slider HealthBar;
+    public int Health = 100;
+    
+    bool dead = false;
+
+    public override void OnAwake()
     {
-        base.OnStart();
+        base.OnAwake();
 
         player = GameObject.FindGameObjectWithTag("Player").transform;
 
@@ -35,12 +38,18 @@ public class Enemy : FSMEntity, IDamageable
         PatrolPoints[1] = transform.position - Vector3.right * PatrolDistance / 2;
 
         EnemyStateMachine = new StateMachine();
+    }
+
+    public override void OnStart()
+    {
+        base.OnStart();
 
         PatrolState = new EnemyPatrolState(this, EnemyStateMachine);
         AggressiveState = new EnemyAggressiveState(this, EnemyStateMachine);
 
         EnemyStateMachine.Initialize(StateType.PatrolState, PatrolState);
         EnemyStateMachine.AddState(StateType.AggressiveState, AggressiveState);
+        EnemyStateMachine.AddState(StateType.NullState, null);
     }
 
     public override void OnUpdate()
@@ -52,7 +61,31 @@ public class Enemy : FSMEntity, IDamageable
 
     public void TakeDamage()
     {
+        if (dead) return;
 
+        Health -= 20;
+        HealthBar.value = Health;
+
+        if (Health > 0)
+        {
+            Animator.SetTrigger("TakeHit");
+        }
+        else
+        {
+            Animator.SetTrigger("Death");
+            dead = true;
+            EnemyStateMachine.SwitchState(StateType.NullState);
+        }
+    }
+
+    public void Attack()
+    {
+
+    }
+
+    public void Die()
+    {
+        Destroy(gameObject);
     }
 
     public void OnDrawGizmos()
@@ -64,6 +97,7 @@ public class Enemy : FSMEntity, IDamageable
         Gizmos.DrawWireCube(transform.position + transform.right * FarTriggerDistance * 0.5f, new Vector2(FarTriggerDistance, 0.17f));
 
         Gizmos.color = Color.yellow;
-        Gizmos.DrawWireCube((PatrolPoints[0] + PatrolPoints[1]) / 2, new Vector2(PatrolDistance, 0.5f));
+        Gizmos.DrawWireCube((transform.position + Vector3.right * PatrolDistance / 2 +
+            (transform.position - Vector3.right * PatrolDistance / 2)) / 2, new Vector2(PatrolDistance, 0.5f));
     }
 }
