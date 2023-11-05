@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class State
 {
-    protected FSMEntity player;
+    protected FSMEntity fsmEntity;
     protected StateMachine playerStateMachine;
 
-    public State(FSMEntity player, StateMachine stateMachine)
+    public State(FSMEntity fSMEntity, StateMachine stateMachine)
     {
         this.playerStateMachine = stateMachine;
-        this.player = player;
+        this.fsmEntity = fSMEntity;
     }
 
     public virtual void Enter() { }

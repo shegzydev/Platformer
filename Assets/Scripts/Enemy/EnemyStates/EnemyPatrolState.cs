@@ -27,7 +27,7 @@ public class EnemyPatrolState : State
     public override void Enter()
     {
         base.Enter();
-        enemy = (Enemy)player;
+        enemy = (Enemy)fsmEntity;
 
         currentPatrolPoint = 0;
         currentPoint = enemy.PatrolPoints[currentPatrolPoint];
@@ -43,16 +43,19 @@ public class EnemyPatrolState : State
 
         currentPoint = enemy.PatrolPoints[currentPatrolPoint];
 
-        enemy.transform.position = Vector3.MoveTowards(player.transform.position, currentPoint, player.MoveSpeed * Time.deltaTime);
+        enemy.transform.position = Vector3.MoveTowards(fsmEntity.transform.position, currentPoint, fsmEntity.MoveSpeed * Time.deltaTime);
         
         if (Vector3.Distance(enemy.transform.position, currentPoint) < 0.05f)
         {
             enemy.StartCoroutine(approachNextTarget());
         }
 
-        if(Physics2D.OverlapBox(enemy.transform.position + enemy.transform.right * enemy.FarTriggerDistance * 0.5f, new Vector2(enemy.FarTriggerDistance, 0.17f), 0, enemy.playerLayer))
+        if (Physics2D.OverlapBox((enemy.PatrolPoints[0] + enemy.PatrolPoints[1]) / 2, new Vector2(enemy.PatrolDistance, 0.5f), 0, enemy.playerLayer))
         {
-            enemy.EnemyStateMachine.SwitchState(StateType.AggressiveState);
+            if (Physics2D.OverlapBox(enemy.transform.position + enemy.transform.right * enemy.FarTriggerDistance * 0.5f, new Vector2(enemy.FarTriggerDistance, 0.17f), 0, enemy.playerLayer))
+            {
+                enemy.EnemyStateMachine.SwitchState(StateType.AggressiveState);
+            }
         }
     }
     IEnumerator approachNextTarget()

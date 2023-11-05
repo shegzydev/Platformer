@@ -17,25 +17,25 @@ public class PlayerJumpState : State
         doubleJump = false;
 
         StartJump();
-        player.StartCoroutine(Jump());
+        fsmEntity.StartCoroutine(Jump());
     }
 
     public override void Update()
     {
         base.Update();
 
-        player.Animator.SetFloat("JumpFactor", player.RB.velocity.y);
+        fsmEntity.Animator.SetFloat("JumpFactor", fsmEntity.RB.velocity.y);
 
-        if (Input.GetKeyDown(KeyCode.Space) && !doubleJump)
+        if (InputManager.Input.Input.Jump.WasPressedThisFrame() && !doubleJump)
         {
             StartJump();
             doubleJump = true;
         }
 
-        if (Input.GetKeyDown(KeyCode.X))
+        if (InputManager.Input.Input.Fire.WasPressedThisFrame())
         {
             Debug.Log("ShootInJump");
-            player.Animator.SetTrigger("Shoot");
+            fsmEntity.Animator.SetTrigger("Shoot");
         }
     }
 
@@ -48,14 +48,14 @@ public class PlayerJumpState : State
     {
         hInput = Input.GetAxis("Horizontal");
 
-        player.transform.position += new Vector3(0f, 0.15f, 0);
-        player.RB.velocity = new Vector2(hInput * player.MoveSpeed, Mathf.Sqrt(2 * 9.81f * player.JumpHeight));
-        player.Animator.SetTrigger("Jump");
+        fsmEntity.transform.position += new Vector3(0f, 0.15f, 0);
+        fsmEntity.RB.velocity = new Vector2(hInput * fsmEntity.MoveSpeed, Mathf.Sqrt(2 * 9.81f * fsmEntity.JumpHeight));
+        fsmEntity.Animator.SetTrigger("Jump");
     }
 
     IEnumerator Jump()
     {
-        yield return new WaitUntil(() => player.IsGrounded);
+        yield return new WaitUntil(() => fsmEntity.IsGrounded);
         playerStateMachine.SwitchState(StateType.GroundState);
     }
 }

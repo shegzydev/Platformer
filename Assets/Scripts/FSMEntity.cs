@@ -5,6 +5,7 @@ public class FSMEntity : MonoBehaviour
 {
     public float JumpHeight = 0.5f;
     public float MoveSpeed = 1.5f;
+
     public Rigidbody2D RB;
     public Animator Animator;
 

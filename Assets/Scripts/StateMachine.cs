@@ -15,9 +15,9 @@ public class StateMachine
     public void Initialize(StateType stateType, State startState)
     {
         StateList = new State[System.Enum.GetValues(typeof(StateType)).Length];
-
+        
         StateList[(int)stateType] = startState;
-
+        
         CurrentPlayerState = startState;
         CurrentPlayerState.Enter();
     }
@@ -37,7 +37,7 @@ public class StateMachine
         }
         catch (System.Exception e)
         {
-            Debug.LogException(e);
+            //Debug.LogException(e);
         }
     }
 
@@ -49,7 +49,7 @@ public class StateMachine
         }
         catch (System.Exception e)
         {
-            Debug.LogException(e);
+            //Debug.LogException(e);
         }
     }
 }

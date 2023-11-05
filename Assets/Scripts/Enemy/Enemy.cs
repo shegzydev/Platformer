@@ -49,7 +49,7 @@ public class Enemy : FSMEntity, IDamageable
 
         EnemyStateMachine.Initialize(StateType.PatrolState, PatrolState);
         EnemyStateMachine.AddState(StateType.AggressiveState, AggressiveState);
-        EnemyStateMachine.AddState(StateType.NullState, null);
+        EnemyStateMachine.AddState(StateType.NullState, new State(null, null));
     }
 
     public override void OnUpdate()

@@ -20,7 +20,7 @@ public class EnemyAggressiveState : State
     public override void Enter()
     {
         base.Enter();
-        enemy = (Enemy)player;
+        enemy = (Enemy)fsmEntity;
 
         xPos = enemy.transform.position.x;
         timeSinceLeftAggressiveZone = 0;
@@ -41,7 +41,6 @@ public class EnemyAggressiveState : State
             enemy.transform.rotation = Quaternion.Euler(0, (enemy.player.position.x - enemy.transform.position.x) > 0 ? 0 : 180, 0);
 
             float playerDistance = Mathf.Abs(enemy.transform.position.x - enemy.player.position.x) - enemy.attackDistance;
-
 
             if (playerDistance > 0)
             {
