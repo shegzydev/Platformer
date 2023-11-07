@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class Boss : FSMEntity, IDamageable
@@ -10,9 +11,12 @@ public class Boss : FSMEntity, IDamageable
     [Header("UI")]
     public Slider HealthBar;
     public int Health = 2000;
-    bool dead;
 
+    public bool Slashing;
+
+    bool dead;
     bool activated;
+    public UnityEvent OnDead;
 
     public override void OnAwake()
     {
@@ -55,7 +59,7 @@ public class Boss : FSMEntity, IDamageable
         if (!activated) return;
         if (dead) return;
 
-        Health -= 20;
+        Health -= 10;
 
         if (HealthBar) HealthBar.value = Health;
 
@@ -65,6 +69,7 @@ public class Boss : FSMEntity, IDamageable
         }
         else
         {
+            OnDead.Invoke();
             Animator.SetTrigger("Death");
             dead = true;
             BossStateMachine.SwitchState(StateType.NullState);

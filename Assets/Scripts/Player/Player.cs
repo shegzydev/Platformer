@@ -24,6 +24,9 @@ public class Player : FSMEntity
 
     public override void OnAwake()
     {
+        QualitySettings.vSyncCount = 0;
+        Application.targetFrameRate = 30;
+
         PlayerStateMachine = new StateMachine();
 
         groundState = new PlayerGroundState(this, PlayerStateMachine);
@@ -31,6 +34,8 @@ public class Player : FSMEntity
 
         PlayerStateMachine.Initialize(StateType.GroundState, groundState);
         PlayerStateMachine.AddState(StateType.JumpState, jumpState);
+
+        Debug.Log(Application.targetFrameRate+" fps");
     }
 
     public override void OnUpdate()

@@ -17,7 +17,10 @@ public class DialogManager : MonoBehaviour
     public Text NameText;
 
     public GameObject DialogPanel;
+    public UnityEvent OnStartDialogue;
 
+    bool dialogOpened;
+    bool writing;
     void Start()
     {
 
@@ -25,7 +28,7 @@ public class DialogManager : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyUp(KeyCode.Space))
+        if (InputManager.Input.Dialog.Skip.WasPressedThisFrame() && dialogOpened && !writing)
         {
             NextMessage();
         }
@@ -36,6 +39,9 @@ public class DialogManager : MonoBehaviour
         InputManager.Deactivate();
 
         DialogPanel.SetActive(true);
+        OnStartDialogue.Invoke();
+
+        dialogOpened = true;
 
         currentMessages = messages;
         currentActors = actors;
@@ -52,20 +58,33 @@ public class DialogManager : MonoBehaviour
         {
             InputManager.Activate();
             onEndDialogue.Invoke();
-            DialogPanel.SetActive (false);
+            DialogPanel.SetActive(false);
+            dialogOpened = false;
             return;
         }
 
+        writing = true;
         Icon.sprite = currentActors[currentMessages[currentMessageIndex].actorID].sprite;
-
         NameText.text = currentActors[currentMessages[currentMessageIndex].actorID].name;
-        MessageText.text = currentMessages[currentMessageIndex].message;
 
-        currentMessageIndex++;
+        StartCoroutine(WritingRoutine());
+        //MessageText.text = currentMessages[currentMessageIndex].message;
     }
 
     public void NextMessage()
     {
         DisplayMessage();
+    }
+
+    IEnumerator WritingRoutine()
+    {
+        MessageText.text = "";
+        for (int i = 0; i < currentMessages[currentMessageIndex].message.Length; i++)
+        {
+            MessageText.text += currentMessages[currentMessageIndex].message[i];
+            yield return null;
+        }
+        writing = false;
+        currentMessageIndex++;
     }
 }

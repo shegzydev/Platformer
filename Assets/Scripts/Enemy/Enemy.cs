@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class Enemy : FSMEntity, IDamageable
@@ -21,11 +22,14 @@ public class Enemy : FSMEntity, IDamageable
     public LayerMask playerLayer;
     public Transform player;
 
+    public bool Slashing;
+
     [Header("Health")]
     public Slider HealthBar;
     public int Health = 100;
     
     bool dead = false;
+    public UnityEvent OnDead;
 
     public override void OnAwake()
     {
@@ -63,7 +67,7 @@ public class Enemy : FSMEntity, IDamageable
     {
         if (dead) return;
 
-        Health -= 20;
+        Health -= 10;
         HealthBar.value = Health;
 
         if (Health > 0)
@@ -72,6 +76,7 @@ public class Enemy : FSMEntity, IDamageable
         }
         else
         {
+            OnDead.Invoke();
             Animator.SetTrigger("Death");
             dead = true;
             EnemyStateMachine.SwitchState(StateType.NullState);

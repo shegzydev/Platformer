@@ -33,7 +33,11 @@ public class BossAggressiveState : State
         if (playerDistance > 0)
         {
             float pointToBe = (player.position.x) + Mathf.Sign(boss.transform.position.x - player.position.x) * boss.attackDistance;
-            xPos = Mathf.MoveTowards(xPos, pointToBe, boss.MoveSpeed * 0.5f * Time.deltaTime);
+            
+            if (!boss.Animator.GetCurrentAnimatorStateInfo(0).IsName("Attack"))
+            {
+                xPos = Mathf.MoveTowards(xPos, pointToBe, boss.MoveSpeed * 0.5f * Time.deltaTime);
+            }
         }
 
         boss.transform.position = new Vector2(xPos, boss.transform.position.y);

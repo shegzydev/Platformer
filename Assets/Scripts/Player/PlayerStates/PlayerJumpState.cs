@@ -37,6 +37,8 @@ public class PlayerJumpState : State
             Debug.Log("ShootInJump");
             fsmEntity.Animator.SetTrigger("Shoot");
         }
+
+        fsmEntity.RB.velocity = new Vector2(hInput * fsmEntity.MoveSpeed, fsmEntity.RB.velocity.y);
     }
 
     public override void Exit()

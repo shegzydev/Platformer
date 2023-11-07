@@ -23,12 +23,12 @@ public class InputManager
     public static void Activate()
     {
         if (Instance == null) Instance = new InputManager();
-        Instance.InputSystem.Enable();
+        Instance.InputSystem.Input.Enable();
     }
 
     public static void Deactivate()
     {
         if (Instance == null) Instance = new InputManager();
-        Instance.InputSystem.Disable();
+        Instance.InputSystem.Input.Disable();
     }
 }

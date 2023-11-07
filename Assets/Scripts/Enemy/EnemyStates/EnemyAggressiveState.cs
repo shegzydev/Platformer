@@ -45,7 +45,10 @@ public class EnemyAggressiveState : State
             if (playerDistance > 0)
             {
                 float pointToBe = (enemy.player.position.x) + Mathf.Sign(enemy.transform.position.x - enemy.player.position.x) * enemy.attackDistance;
-                xPos = Mathf.MoveTowards(xPos, pointToBe, enemy.MoveSpeed * 0.5f * Time.deltaTime);
+                if (!enemy.Animator.GetCurrentAnimatorStateInfo(0).IsName("Attack"))
+                {
+                    xPos = Mathf.MoveTowards(xPos, pointToBe, enemy.MoveSpeed * 0.5f * Time.deltaTime);
+                }
             }
 
             enemy.transform.position = new Vector2(xPos, enemy.transform.position.y);

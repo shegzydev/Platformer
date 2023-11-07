@@ -29,7 +29,7 @@ public class EnemyPatrolState : State
         base.Enter();
         enemy = (Enemy)fsmEntity;
 
-        currentPatrolPoint = 0;
+        currentPatrolPoint = Random.Range(0, 2);
         currentPoint = enemy.PatrolPoints[currentPatrolPoint];
         enemy.transform.rotation = Quaternion.Euler(0, (enemy.PatrolPoints[currentPatrolPoint].x - enemy.transform.position.x) > 0 ? 0 : 180, 0);
 
@@ -65,7 +65,7 @@ public class EnemyPatrolState : State
 
         enemy.Animator.SetFloat("Move", (int)AnimState.Idle);
 
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(0.95f);
 
         currentPatrolPoint = 1 - currentPatrolPoint;
         enemy.transform.rotation = Quaternion.Euler(0, (enemy.PatrolPoints[currentPatrolPoint].x - enemy.transform.position.x) > 0 ? 0 : 180, 0);
