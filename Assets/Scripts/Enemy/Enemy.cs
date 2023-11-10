@@ -22,6 +22,8 @@ public class Enemy : FSMEntity, IDamageable
     public LayerMask playerLayer;
     public Transform player;
 
+    public Transform AttackPoint;
+
     public bool Slashing;
 
     [Header("Health")]
@@ -85,7 +87,10 @@ public class Enemy : FSMEntity, IDamageable
 
     public void Attack()
     {
-
+        if(Physics2D.OverlapCircle(AttackPoint.position, 0.26f, playerLayer))
+        {
+            player.GetComponent<IDamageable>()?.TakeDamage();
+        }
     }
 
     public void Die()

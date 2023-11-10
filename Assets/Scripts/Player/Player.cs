@@ -1,8 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Events;
 
-public class Player : FSMEntity
+public class Player : FSMEntity, IDamageable
 {
     StateMachine PlayerStateMachine;
 
@@ -22,6 +24,11 @@ public class Player : FSMEntity
     [SerializeField] GameObject arrow;
     [SerializeField] Transform point;
 
+    HudManager hudManager;
+    [SerializeField] int hp = 100;
+    bool dead = false;
+    public UnityEvent OnDead;
+
     public override void OnAwake()
     {
         QualitySettings.vSyncCount = 0;
@@ -35,12 +42,12 @@ public class Player : FSMEntity
         PlayerStateMachine.Initialize(StateType.GroundState, groundState);
         PlayerStateMachine.AddState(StateType.JumpState, jumpState);
 
-        Debug.Log(Application.targetFrameRate+" fps");
+        hudManager = FindObjectOfType<HudManager>();
     }
 
     public override void OnUpdate()
     {
-        hInput = Input.GetAxis("Horizontal");
+        //hInput = Input.GetAxis("Horizontal");
 
         PlayerStateMachine.Update();
     }
@@ -55,5 +62,23 @@ public class Player : FSMEntity
         Gizmos.color = IsGrounded ? Color.green : Color.red;
         Gizmos.DrawWireSphere(transform.position + Vector3.up * 0.5f, 0.05f);
         Gizmos.DrawLine(transform.position, transform.position + Vector3.down * 0.182f);
+    }
+
+    public void TakeDamage()
+    {
+        if (dead) return;
+
+        hp -= 10;
+        hudManager.UpdateHudEntry(HUDData.HP, hp);
+
+        if (hp <= 0)
+        {
+            OnDead.Invoke();
+            Animator.SetTrigger("Death");
+            dead = true;
+            PlayerStateMachine.SwitchState(StateType.NullState);
+        }
+
+        Debug.Log("Damage Taken");
     }
 }
