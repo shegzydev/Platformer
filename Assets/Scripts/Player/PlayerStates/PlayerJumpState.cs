@@ -52,11 +52,15 @@ public class PlayerJumpState : State
 
         fsmEntity.transform.position += new Vector3(0f, 0.15f, 0);
         fsmEntity.RB.velocity = new Vector2(hInput * fsmEntity.MoveSpeed, Mathf.Sqrt(2 * 9.81f * fsmEntity.JumpHeight));
+        
         fsmEntity.Animator.SetTrigger("Jump");
     }
 
     IEnumerator Jump()
     {
+        yield return new WaitForSeconds(0.3f);
+        fsmEntity.Animator.ResetTrigger("Jump");
+
         yield return new WaitUntil(() => fsmEntity.IsGrounded);
         playerStateMachine.SwitchState(StateType.GroundState);
     }

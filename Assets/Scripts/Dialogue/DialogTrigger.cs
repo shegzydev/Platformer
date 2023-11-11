@@ -7,6 +7,9 @@ public class DialogTrigger : MonoBehaviour
 {
     public Actor[] actors;
     public Message[] messages;
+    [Space]
+    [Space]
+    public UnityEvent OnTriggerDialogEvent;
     public UnityEvent OnEndDialogEvent;
 
     void Start()
@@ -29,6 +32,7 @@ public class DialogTrigger : MonoBehaviour
         Player p = collision.GetComponent<Player>();
         if (p)
         {
+            OnTriggerDialogEvent.Invoke();
             OpenDialogue();
             gameObject.SetActive(false);
         }

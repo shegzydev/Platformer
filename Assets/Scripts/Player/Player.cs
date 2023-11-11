@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.Events;
 
 public class Player : FSMEntity, IDamageable
@@ -29,8 +29,12 @@ public class Player : FSMEntity, IDamageable
     bool dead = false;
     public UnityEvent OnDead;
 
+    Vector2 startPos;
+
     public override void OnAwake()
     {
+        startPos = transform.position;
+
         QualitySettings.vSyncCount = 0;
         Application.targetFrameRate = 30;
 
@@ -48,6 +52,11 @@ public class Player : FSMEntity, IDamageable
     public override void OnUpdate()
     {
         //hInput = Input.GetAxis("Horizontal");
+
+        if(transform.position.y <= -2.5f)
+        {
+            transform.position = startPos;
+        }
 
         PlayerStateMachine.Update();
     }
@@ -77,8 +86,14 @@ public class Player : FSMEntity, IDamageable
             Animator.SetTrigger("Death");
             dead = true;
             PlayerStateMachine.SwitchState(StateType.NullState);
+            Invoke("Reload", 1.5f);
         }
 
         Debug.Log("Damage Taken");
+    }
+
+    void Reload()
+    {
+        SceneManager.LoadSceneAsync(0);
     }
 }

@@ -22,10 +22,13 @@ public class Enemy : FSMEntity, IDamageable
     public LayerMask playerLayer;
     public Transform player;
 
+    [Space]
+    [Header("Attacking")]
+    public float TimeBetweenAttacks;
     public Transform AttackPoint;
-
     public bool Slashing;
 
+    [Space]
     [Header("Health")]
     public Slider HealthBar;
     public int Health = 100;

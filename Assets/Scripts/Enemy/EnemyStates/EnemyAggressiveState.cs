@@ -12,6 +12,7 @@ public class EnemyAggressiveState : State
     float xPos;
 
     float timeSinceLeftAggressiveZone;
+    float timeSinceAttack;
     public EnemyAggressiveState(FSMEntity enemy, StateMachine stateMachine) : base(enemy, stateMachine)
     {
 
@@ -22,6 +23,8 @@ public class EnemyAggressiveState : State
         base.Enter();
         enemy = (Enemy)fsmEntity;
 
+        timeSinceAttack = 0;
+
         xPos = enemy.transform.position.x;
         timeSinceLeftAggressiveZone = 0;
         enemy.Animator.Play("Move");
@@ -30,6 +33,8 @@ public class EnemyAggressiveState : State
     public override void Update()
     {
         base.Update();
+
+        timeSinceAttack += Time.deltaTime;
 
         if (!Physics2D.OverlapBox((enemy.PatrolPoints[0] + enemy.PatrolPoints[1]) / 2, new Vector2(enemy.PatrolDistance, 0.5f), 0, enemy.playerLayer))
         {
@@ -57,7 +62,11 @@ public class EnemyAggressiveState : State
 
             if (playerDistance < 0.001f)
             {
-                enemy.Animator.SetTrigger("Attack");
+                if (timeSinceAttack >= enemy.TimeBetweenAttacks)
+                {
+                    enemy.Animator.SetTrigger("Attack");
+                    timeSinceAttack = 0;
+                }
             }
 
             timeSinceLeftAggressiveZone = 0;

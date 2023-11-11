@@ -442,7 +442,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 3
   m_Sprite: {fileID: 505568788, guid: 68c6f3dbefca2c4489169fb40e42c178, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -564,6 +564,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   player: {fileID: 0}
+  TimeBetweenAttacks: 1
   AttackPoint: {fileID: 8065192198526978161}
   Slashing: 0
   HealthBar: {fileID: 650879104926479530}

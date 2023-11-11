@@ -15,7 +15,6 @@ public class PlayerGroundState : State
     public override void Enter()
     {
         base.Enter();
-
         fsmEntity.Animator.SetTrigger("ToGround");
     }
 

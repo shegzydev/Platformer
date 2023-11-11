@@ -28,9 +28,16 @@ public class DialogManager : MonoBehaviour
 
     void Update()
     {
-        if (InputManager.Input.Dialog.Skip.WasPressedThisFrame() && dialogOpened && !writing)
+        if (InputManager.Input.Dialog.Skip.WasPressedThisFrame() && dialogOpened)
         {
-            NextMessage();
+            if (!writing)
+            {
+                NextMessage();
+            }
+            else
+            {
+                FillUp();
+            }
         }
     }
 
@@ -76,11 +83,21 @@ public class DialogManager : MonoBehaviour
         DisplayMessage();
     }
 
+    void FillUp()
+    {
+        MessageText.text = currentMessages[currentMessageIndex].message;
+        writing = false;
+    }
+
     IEnumerator WritingRoutine()
     {
         MessageText.text = "";
         for (int i = 0; i < currentMessages[currentMessageIndex].message.Length; i++)
         {
+            if (!writing)
+            {
+                break;
+            }
             MessageText.text += currentMessages[currentMessageIndex].message[i];
             yield return null;
         }

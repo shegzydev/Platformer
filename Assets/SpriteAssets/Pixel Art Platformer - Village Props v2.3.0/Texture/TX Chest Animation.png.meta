@@ -34,7 +34,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -136,7 +136,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: TX Chest Animation_0
+      name: ChestA_0
       rect:
         serializedVersion: 2
         x: 16
@@ -157,7 +157,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: TX Chest Animation_1
+      name: ChestA_1
       rect:
         serializedVersion: 2
         x: 80
@@ -178,7 +178,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: TX Chest Animation_2
+      name: ChestA_2
       rect:
         serializedVersion: 2
         x: 144
@@ -199,7 +199,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: TX Chest Animation_3
+      name: ChestA_3
       rect:
         serializedVersion: 2
         x: 208
@@ -220,7 +220,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: TX Chest Animation_4
+      name: ChestA_4
       rect:
         serializedVersion: 2
         x: 272
@@ -241,7 +241,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: TX Chest Animation_5
+      name: ChestA_5
       rect:
         serializedVersion: 2
         x: 336
@@ -262,7 +262,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: TX Chest Animation_6
+      name: ChestA_6
       rect:
         serializedVersion: 2
         x: 400
@@ -734,8 +734,13 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      TX Chest Animation_0: -141444371
-      TX Chest Animation_1: 1061508637
+      ChestA_0: -141444371
+      ChestA_1: 1061508637
+      ChestA_2: -1691903874
+      ChestA_3: -673550839
+      ChestA_4: 495532623
+      ChestA_5: 1547504666
+      ChestA_6: 146800016
       TX Chest Animation_10: 170699955
       TX Chest Animation_11: 1726415206
       TX Chest Animation_12: -446387373
@@ -746,7 +751,6 @@ TextureImporter:
       TX Chest Animation_17: 690239704
       TX Chest Animation_18: -1633669179
       TX Chest Animation_19: -594921896
-      TX Chest Animation_2: -1691903874
       TX Chest Animation_20: -1645311248
       TX Chest Animation_21: 88294346
       TX Chest Animation_22: 1157168810
@@ -755,10 +759,6 @@ TextureImporter:
       TX Chest Animation_25: 1276687720
       TX Chest Animation_26: 1108645133
       TX Chest Animation_27: 1125802672
-      TX Chest Animation_3: -673550839
-      TX Chest Animation_4: 495532623
-      TX Chest Animation_5: 1547504666
-      TX Chest Animation_6: 146800016
       TX Chest Animation_7: 1673930183
       TX Chest Animation_8: -52517337
       TX Chest Animation_9: 1263940016

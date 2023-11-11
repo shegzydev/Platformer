@@ -18,6 +18,11 @@ public class Boss : FSMEntity, IDamageable
     bool activated;
     public UnityEvent OnDead;
 
+    [Header("")]
+    [SerializeField] Transform AttackPoint;
+    [SerializeField] LayerMask playerLayer;
+    Transform player;
+
     public override void OnAwake()
     {
         base.OnAwake();
@@ -29,8 +34,10 @@ public class Boss : FSMEntity, IDamageable
     {
         base.OnStart();
 
+        player = GameObject.FindGameObjectWithTag("Player").transform;
+
         BossStateMachine?.Initialize(StateType.NullState, new State(null, null));
-        BossStateMachine.AddState(StateType.GroundState, new BossAggressiveState(this, BossStateMachine));
+        BossStateMachine?.AddState(StateType.GroundState, new BossAggressiveState(this, BossStateMachine));
     }
 
     public override void OnUpdate()
@@ -44,6 +51,14 @@ public class Boss : FSMEntity, IDamageable
     {
         HealthBar.gameObject.SetActive(false);
         Destroy(gameObject);
+    }
+
+    public void Attack()
+    {
+        if (Physics2D.OverlapCircle(AttackPoint.position, 0.4f, playerLayer))
+        {
+            player.GetComponent<IDamageable>()?.TakeDamage();
+        }
     }
 
     public void Activate()
