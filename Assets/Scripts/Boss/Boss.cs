@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-public class Boss : FSMEntity, IDamageable
+public class Boss : Character, IDamageable
 {
     StateMachine BossStateMachine { get; set; }
     public float attackDistance = 0.4f;
@@ -27,7 +27,7 @@ public class Boss : FSMEntity, IDamageable
     {
         base.OnAwake();
 
-        BossStateMachine = new StateMachine();
+        BossStateMachine = new StateMachine(new IdleState(this));
     }
 
     public override void OnStart()
@@ -35,9 +35,6 @@ public class Boss : FSMEntity, IDamageable
         base.OnStart();
 
         player = GameObject.FindGameObjectWithTag("Player").transform;
-
-        BossStateMachine?.Initialize(StateType.NullState, new State(null, null));
-        BossStateMachine?.AddState(StateType.GroundState, new BossAggressiveState(this, BossStateMachine));
     }
 
     public override void OnUpdate()
@@ -65,7 +62,6 @@ public class Boss : FSMEntity, IDamageable
     {
         activated = true;
         Debug.Log("InGroundState");
-        BossStateMachine.SwitchState(StateType.GroundState);
         HealthBar.gameObject.SetActive(true);
     }
 
@@ -87,7 +83,6 @@ public class Boss : FSMEntity, IDamageable
             OnDead.Invoke();
             Animator.SetTrigger("Death");
             dead = true;
-            BossStateMachine.SwitchState(StateType.NullState);
         }
     }
 }

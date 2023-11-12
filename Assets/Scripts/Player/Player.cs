@@ -4,21 +4,10 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Events;
 
-public class Player : FSMEntity, IDamageable
+public class Player : Character, IDamageable
 {
-    StateMachine PlayerStateMachine;
-
-    #region groundedvariable
-    public PlayerGroundState groundState;
-    #endregion
-
-    public FallState fallState;
-
-    #region jumpvariables
-    public PlayerJumpState jumpState;
-    #endregion
-
-    public float hInput;
+    public int GroundedState;
+    public int JumpingState;
 
     [Header("Projectiles")]
     [SerializeField] GameObject arrow;
@@ -33,32 +22,37 @@ public class Player : FSMEntity, IDamageable
 
     public override void OnAwake()
     {
+        base.OnAwake();
+
         startPos = transform.position;
 
         QualitySettings.vSyncCount = 0;
         Application.targetFrameRate = 30;
 
-        PlayerStateMachine = new StateMachine();
-
-        groundState = new PlayerGroundState(this, PlayerStateMachine);
-        jumpState = new PlayerJumpState(this, PlayerStateMachine);
-
-        PlayerStateMachine.Initialize(StateType.GroundState, groundState);
-        PlayerStateMachine.AddState(StateType.JumpState, jumpState);
-
         hudManager = FindObjectOfType<HudManager>();
+
+        StateMachine = new StateMachine(new GroundState(this));
     }
 
     public override void OnUpdate()
     {
-        //hInput = Input.GetAxis("Horizontal");
+        hInput = InputManager.Input.Input.Horizontal.ReadValue<float>();
 
-        if(transform.position.y <= -2.5f)
+        JumpBuffer -= Time.deltaTime;
+        if (InputManager.Input.Input.Jump.WasPressedThisFrame())
+        {
+            JumpBuffer = 0.25f;
+        }
+
+        if (IsGrounded) { CoyoteTime = 0.25f; }
+        else { CoyoteTime -= Time.deltaTime; }
+
+        if (transform.position.y <= -2.5f)
         {
             transform.position = startPos;
         }
 
-        PlayerStateMachine.Update();
+        StateMachine.Update();
     }
 
     public void Shoot()
@@ -70,7 +64,8 @@ public class Player : FSMEntity, IDamageable
     {
         Gizmos.color = IsGrounded ? Color.green : Color.red;
         Gizmos.DrawWireSphere(transform.position + Vector3.up * 0.5f, 0.05f);
-        Gizmos.DrawLine(transform.position, transform.position + Vector3.down * 0.182f);
+
+        Gizmos.DrawLine(transform.position, transform.position + Vector3.right * 0.1f + Vector3.down * (GroundCheck + 0.08f));
     }
 
     public void TakeDamage()
@@ -85,7 +80,7 @@ public class Player : FSMEntity, IDamageable
             OnDead.Invoke();
             Animator.SetTrigger("Death");
             dead = true;
-            PlayerStateMachine.SwitchState(StateType.NullState);
+            //PlayerStateMachine.SwitchState(StateType.NullState);
             Invoke("Reload", 1.5f);
         }
 
@@ -95,5 +90,11 @@ public class Player : FSMEntity, IDamageable
     void Reload()
     {
         SceneManager.LoadSceneAsync(0);
+    }
+
+    public void SetCol(bool flag)
+    {
+        if (flag) gameObject.layer = LayerMask.NameToLayer("Player");
+        else gameObject.layer = LayerMask.NameToLayer("PlayerNoCol");
     }
 }

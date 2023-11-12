@@ -7,7 +7,7 @@ public class BossAggressiveState : State
     Transform player;
     float xPos;
 
-    public BossAggressiveState(FSMEntity fSMEntity, StateMachine stateMachine) : base(fSMEntity, stateMachine)
+    public BossAggressiveState(Character character) : base(character)
     {
 
     }
@@ -17,11 +17,11 @@ public class BossAggressiveState : State
         base.Enter();
 
         player = GameObject.FindGameObjectWithTag("Player").transform;
-        boss = (Boss)fsmEntity;
+        boss = (Boss)character;
         xPos = boss.transform.position.x;
     }
 
-    public override void Update()
+    public override State Update()
     {
         base.Update();
 
@@ -48,6 +48,7 @@ public class BossAggressiveState : State
         {
             boss.Animator.SetTrigger("Attack");
         }
+        return this;
     }
 
     public override void Exit()

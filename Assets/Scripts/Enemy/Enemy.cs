@@ -4,15 +4,10 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-public class Enemy : FSMEntity, IDamageable
+public class Enemy : Character, IDamageable
 {
-    public StateMachine EnemyStateMachine;
-    public EnemyPatrolState PatrolState;
-    public EnemyAggressiveState AggressiveState;
-
     //AggresiveVariables
     public float FarTriggerDistance;
-    public float NearTriggerDistance;
     public float attackDistance;
 
     //Patrol Variables
@@ -21,6 +16,8 @@ public class Enemy : FSMEntity, IDamageable
     public Vector3[] PatrolPoints;
     public LayerMask playerLayer;
     public Transform player;
+
+    public Vector3 Target;
 
     [Space]
     [Header("Attacking")]
@@ -32,7 +29,8 @@ public class Enemy : FSMEntity, IDamageable
     [Header("Health")]
     public Slider HealthBar;
     public int Health = 100;
-    
+
+
     bool dead = false;
     public UnityEvent OnDead;
 
@@ -46,26 +44,23 @@ public class Enemy : FSMEntity, IDamageable
         PatrolPoints[0] = transform.position + Vector3.right * PatrolDistance / 2;
         PatrolPoints[1] = transform.position - Vector3.right * PatrolDistance / 2;
 
-        EnemyStateMachine = new StateMachine();
+        StateMachine = new StateMachine(new PatrolState(this));
     }
 
     public override void OnStart()
     {
         base.OnStart();
-
-        PatrolState = new EnemyPatrolState(this, EnemyStateMachine);
-        AggressiveState = new EnemyAggressiveState(this, EnemyStateMachine);
-
-        EnemyStateMachine.Initialize(StateType.PatrolState, PatrolState);
-        EnemyStateMachine.AddState(StateType.AggressiveState, AggressiveState);
-        EnemyStateMachine.AddState(StateType.NullState, new State(null, null));
     }
 
     public override void OnUpdate()
     {
         base.OnUpdate();
 
-        EnemyStateMachine?.Update();
+        Vector3 p = Target - transform.position;
+        float x = Mathf.Clamp(p.x*5, -1, 1);
+        hInput = x;
+
+        StateMachine.Update();
     }
 
     public void TakeDamage()
@@ -84,13 +79,12 @@ public class Enemy : FSMEntity, IDamageable
             OnDead.Invoke();
             Animator.SetTrigger("Death");
             dead = true;
-            EnemyStateMachine.SwitchState(StateType.NullState);
         }
     }
 
     public void Attack()
     {
-        if(Physics2D.OverlapCircle(AttackPoint.position, 0.26f, playerLayer))
+        if (Physics2D.OverlapCircle(AttackPoint.position, 0.26f, playerLayer))
         {
             player.GetComponent<IDamageable>()?.TakeDamage();
         }

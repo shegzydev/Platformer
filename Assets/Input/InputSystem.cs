@@ -53,6 +53,15 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Interact"",
+                    ""type"": ""Button"",
+                    ""id"": ""4fcbc24f-bd7e-4616-9934-96d40f845a1b"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -143,6 +152,28 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
                     ""action"": ""Fire"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""50b10ad0-4ec8-4728-845a-206e4386522c"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Interact"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""07bc3f80-c4c8-4f81-9c0f-797ba2a9ea52"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Interact"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -193,6 +224,7 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
         m_Input_Horizontal = m_Input.FindAction("Horizontal", throwIfNotFound: true);
         m_Input_Jump = m_Input.FindAction("Jump", throwIfNotFound: true);
         m_Input_Fire = m_Input.FindAction("Fire", throwIfNotFound: true);
+        m_Input_Interact = m_Input.FindAction("Interact", throwIfNotFound: true);
         // Dialog
         m_Dialog = asset.FindActionMap("Dialog", throwIfNotFound: true);
         m_Dialog_Skip = m_Dialog.FindAction("Skip", throwIfNotFound: true);
@@ -260,6 +292,7 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
     private readonly InputAction m_Input_Horizontal;
     private readonly InputAction m_Input_Jump;
     private readonly InputAction m_Input_Fire;
+    private readonly InputAction m_Input_Interact;
     public struct InputActions
     {
         private @InputSystem m_Wrapper;
@@ -267,6 +300,7 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
         public InputAction @Horizontal => m_Wrapper.m_Input_Horizontal;
         public InputAction @Jump => m_Wrapper.m_Input_Jump;
         public InputAction @Fire => m_Wrapper.m_Input_Fire;
+        public InputAction @Interact => m_Wrapper.m_Input_Interact;
         public InputActionMap Get() { return m_Wrapper.m_Input; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -285,6 +319,9 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
             @Fire.started += instance.OnFire;
             @Fire.performed += instance.OnFire;
             @Fire.canceled += instance.OnFire;
+            @Interact.started += instance.OnInteract;
+            @Interact.performed += instance.OnInteract;
+            @Interact.canceled += instance.OnInteract;
         }
 
         private void UnregisterCallbacks(IInputActions instance)
@@ -298,6 +335,9 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
             @Fire.started -= instance.OnFire;
             @Fire.performed -= instance.OnFire;
             @Fire.canceled -= instance.OnFire;
+            @Interact.started -= instance.OnInteract;
+            @Interact.performed -= instance.OnInteract;
+            @Interact.canceled -= instance.OnInteract;
         }
 
         public void RemoveCallbacks(IInputActions instance)
@@ -366,6 +406,7 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
         void OnHorizontal(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
         void OnFire(InputAction.CallbackContext context);
+        void OnInteract(InputAction.CallbackContext context);
     }
     public interface IDialogActions
     {

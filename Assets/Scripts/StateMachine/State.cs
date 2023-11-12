@@ -4,16 +4,15 @@ using UnityEngine;
 
 public class State
 {
-    protected FSMEntity fsmEntity;
-    protected StateMachine playerStateMachine;
+    protected Character character;
+    protected StateMachine stateMachine;
 
-    public State(FSMEntity fSMEntity, StateMachine stateMachine)
+    public State(Character character)
     {
-        this.playerStateMachine = stateMachine;
-        this.fsmEntity = fSMEntity;
+        this.character = character;
     }
 
     public virtual void Enter() { }
-    public virtual void Update() { }
+    public virtual State Update() { return this; }
     public virtual void Exit() { }
 }

@@ -9,6 +9,10 @@ public class InteractibleBase : MonoBehaviour, IInteractibles
 
     public UnityEvent OnInteract;
 
+    bool canInteract = false;
+
+    [SerializeField] GameObject icon;
+
     public virtual void Interact() {}
 
     void Start()
@@ -18,15 +22,28 @@ public class InteractibleBase : MonoBehaviour, IInteractibles
 
     void Update()
     {
-        
+        if (InputManager.Input.Input.Interact.WasPressedThisFrame() && canInteract)
+        {
+            Interact();
+            OnInteract.Invoke();
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if(collision.transform == player.transform)
         {
-            Interact();
-            OnInteract.Invoke();
+            canInteract = true;
+            icon?.SetActive(true);
+        }
+    }
+
+    public void OnTriggerExit2D(Collider2D other)
+    {
+        if (other.transform == player.transform)
+        {
+            canInteract = false;
+            icon?.SetActive(false);
         }
     }
 }
