@@ -22,6 +22,7 @@ public class Enemy : Character, IDamageable
     [Space]
     [Header("Attacking")]
     public float TimeBetweenAttacks;
+    public float AttackTimer;
     public Transform AttackPoint;
     public bool Slashing;
 
@@ -55,12 +56,14 @@ public class Enemy : Character, IDamageable
     public override void OnUpdate()
     {
         base.OnUpdate();
+        
+        AttackTimer += Time.deltaTime;
 
         Vector3 p = Target - transform.position;
-        float x = Mathf.Clamp(p.x*5, -1, 1);
+        float x = Mathf.Clamp(p.x * 5, -1, 1);
         hInput = x;
 
-        StateMachine.Update();
+        if(!dead)StateMachine.Update();
     }
 
     public void TakeDamage()
@@ -77,7 +80,7 @@ public class Enemy : Character, IDamageable
         else
         {
             OnDead.Invoke();
-            Animator.SetTrigger("Death");
+            Animator.Play("Death");
             dead = true;
         }
     }
@@ -93,6 +96,26 @@ public class Enemy : Character, IDamageable
     public void Die()
     {
         Destroy(gameObject);
+    }
+
+    public bool InView
+    {
+        get
+        {
+            var Hit =  Physics2D.Raycast(transform.position, transform.right, FarTriggerDistance);
+            
+            Debug.DrawRay(Hit.point, Vector3.up * 2, Color.red);
+            
+            return Hit.transform == player;
+        }
+    }
+
+    public bool InPatrolZone
+    {
+        get
+        {
+            return Physics2D.OverlapArea(PatrolPoints[0] + Vector3.up * 0.5f, PatrolPoints[1] + Vector3.down * 0.5f, playerLayer);
+        }
     }
 
     public void OnDrawGizmos()

@@ -21,13 +21,14 @@ public class GroundState : State
     {
         base.Update();
 
-        if(Input.GetMouseButtonDown(1))
+        if(((Player)character).RollBuffer > 0)
         {
             return new RollingState(character);
         }
 
         if (character.JumpBuffer > 0)
         {
+            character.ResetJumpBuffer();
             return new JumpingState(character);
         }
 

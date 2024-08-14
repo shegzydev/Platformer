@@ -21,6 +21,11 @@ public class FallingState : State
             return new GroundState(character);
         }
 
+        if (((Player)character).OnWall)
+        {
+            return new ClimbingingState(character);
+        }
+
         stateMachine1.Update();
         return base.Update();
     }

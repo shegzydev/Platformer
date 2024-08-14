@@ -6,7 +6,7 @@ AnimatorController:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Idle_0
+  m_Name: WormController
   serializedVersion: 5
   m_AnimatorParameters:
   - m_Name: Move
@@ -67,7 +67,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: 71cc58e1396cf0948a13ee90ed57694e, type: 2}
+  m_Motion: {fileID: 7400000, guid: bf8b73614ed9b40418ae8a3cfa7e9d11, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -93,7 +93,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: 26971df16006e704f8002bd7d9892b51, type: 2}
+  m_Motion: {fileID: 7400000, guid: f413ac312bc7b2e4ab22de03fe0b044a, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -172,7 +172,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: 2f96017199bfa59469ef4c078f794dde, type: 2}
+  m_Motion: {fileID: 7400000, guid: 79e22175ef1ca9647bbd1c2eff26e31a, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 

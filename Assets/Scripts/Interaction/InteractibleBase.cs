@@ -6,9 +6,7 @@ using UnityEngine.Events;
 public class InteractibleBase : MonoBehaviour, IInteractibles
 {
     public GameObject player { get; set; }
-
     public UnityEvent OnInteract;
-
     bool canInteract = false;
 
     [SerializeField] GameObject icon;

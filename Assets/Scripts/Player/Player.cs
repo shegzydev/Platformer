@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 public class Player : Character, IDamageable
 {
@@ -20,6 +21,15 @@ public class Player : Character, IDamageable
 
     Vector2 startPos;
 
+    [Header("Jump")]
+    public GameObject JumpIndicator;
+    public Image JumpGauge;
+
+    public float RollBuffer;
+
+    bool onWall;
+    State stateCache;
+
     public override void OnAwake()
     {
         base.OnAwake();
@@ -36,13 +46,33 @@ public class Player : Character, IDamageable
 
     public override void OnUpdate()
     {
-        hInput = InputManager.Input.Input.Horizontal.ReadValue<float>();
+        hInput = InputManager.LHInput;
+
+        if (InputManager.AttackPressed)
+        {
+            State s = StateMachine.GetCurrentState;
+            if (s.GetType() != typeof(AttackState))
+            {
+                stateCache = s;
+                StateMachine.ForceState(new AttackState(this));
+                Invoke("ToMainState", 0.2f);
+            }
+        }
+
+        RollBuffer -= Time.deltaTime;
+        if (InputManager.RollPressed)
+        {
+            RollBuffer = 0.25f;
+        }
 
         JumpBuffer -= Time.deltaTime;
-        if (InputManager.Input.Input.Jump.WasPressedThisFrame())
+        if (InputManager.JumpPressed)
         {
             JumpBuffer = 0.25f;
         }
+
+        JumpIndicator.SetActive(JumpBuffer > 0);
+        JumpGauge.fillAmount = JumpBuffer / 0.25f;
 
         if (IsGrounded) { CoyoteTime = 0.25f; }
         else { CoyoteTime -= Time.deltaTime; }
@@ -52,7 +82,31 @@ public class Player : Character, IDamageable
             transform.position = startPos;
         }
 
-        StateMachine.Update();
+        if (!dead) StateMachine.Update();
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.transform.CompareTag("Wall"))
+        {
+            onWall = true;
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.transform.CompareTag("Wall"))
+        {
+            onWall = false;
+        }
+    }
+
+    public bool OnWall
+    {
+        get
+        {
+            return onWall;
+        }
     }
 
     public void Shoot()
@@ -73,16 +127,17 @@ public class Player : Character, IDamageable
         if (dead) return;
 
         hp -= 10;
-        hudManager.UpdateHudEntry(HUDData.HP, hp);
+        hudManager.UpdateHud(hp);
 
         if (hp <= 0)
         {
             OnDead.Invoke();
-            Animator.SetTrigger("Death");
+            Animator.Play("Death");
             dead = true;
-            //PlayerStateMachine.SwitchState(StateType.NullState);
             Invoke("Reload", 1.5f);
         }
+
+        CamShaker.Shake(2);
 
         Debug.Log("Damage Taken");
     }
@@ -92,9 +147,14 @@ public class Player : Character, IDamageable
         SceneManager.LoadSceneAsync(0);
     }
 
-    public void SetCol(bool flag)
+    public void SetCollLayer(bool flag)
     {
         if (flag) gameObject.layer = LayerMask.NameToLayer("Player");
         else gameObject.layer = LayerMask.NameToLayer("PlayerNoCol");
+    }
+
+    void ToMainState()
+    {
+        StateMachine.ForceState(stateCache);
     }
 }

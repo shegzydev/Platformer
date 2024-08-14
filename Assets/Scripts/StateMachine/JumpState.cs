@@ -7,7 +7,8 @@ public class JumpState : State
     {
         Debug.Log("flyingUp");
 
-        character.RB.velocity = new Vector2(character.RB.velocity.x, Mathf.Sqrt(2 * 9.81f * character.JumpHeight));
+        character.transform.position += Vector3.right * InputManager.LHInput * 0.1f;
+        character.RB.velocity = new Vector2(character.MoveSpeed * InputManager.LHInput, Mathf.Sqrt(2 * 9.81f * character.JumpHeight));
         character.Animator.Play("Jump");
     }
 

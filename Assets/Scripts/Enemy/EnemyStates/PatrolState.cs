@@ -26,14 +26,19 @@ public class PatrolState : State
             enemy.StartCoroutine(SwitchTargets());
         }
 
-        //if (character.JumpBuffer > 0)
+        if (enemy.InPatrolZone && enemy.InView)
+        {
+            return new AggressiveState(enemy);
+        }
+
+        /**if (character.JumpBuffer > 0)
         //{
         //    return new JumpingState(character);
         //}
         //if (!character.IsGrounded)
         //{
         //    return new FallingState(character);
-        //}
+        //}**/
 
         stateMachine1.Update();
 

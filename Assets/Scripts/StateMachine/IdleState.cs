@@ -14,7 +14,9 @@ public class IdleState : State
     }
     public override State Update()
     {
-        character.RB.velocity = Vector2.MoveTowards(character.RB.velocity, Vector2.zero, 10 * Time.deltaTime);
+        character.Animator.Play("Idle");
+
+        character.RB.velocity = Vector2.MoveTowards(character.RB.velocity, Vector2.zero, 100 * Time.deltaTime);
         
         character.facing = (character.hInput != 0) ? (character.hInput > 0 ? 0 : 180) : character.facing;
         

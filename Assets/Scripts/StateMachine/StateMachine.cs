@@ -11,6 +11,11 @@ public class StateMachine
         CurrentState = initialState;
     }
 
+    public void ForceState(State state)
+    {
+        CurrentState = state;
+    }
+
     public void Update()
     {
         try
@@ -26,5 +31,10 @@ public class StateMachine
         {
 
         }
+    }
+
+    public State GetCurrentState
+    {
+        get { return CurrentState; }
     }
 }

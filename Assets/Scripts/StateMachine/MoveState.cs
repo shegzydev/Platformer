@@ -21,6 +21,7 @@ public class MoveState : State
 
     public override State Update()
     {
+        character.Animator.Play("Run");
         character.facing = (character.hInput != 0) ? (character.hInput > 0 ? 0 : 180) : character.facing;
         character.RB.velocity = new Vector2(character.hInput * character.MoveSpeed, character.RB.velocity.y);
 

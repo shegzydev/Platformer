@@ -9,29 +9,29 @@ public class RollingState : State
     bool FinishRoll;
     public RollingState(Character character) : base(character)
     {
-        character.Animator.Play("Roll");
+        character.Animator.Play("Roll", 0, 0);
         rollDir = character.transform.right;
         character.StartCoroutine(FollowRoll());
-        ((Player)character).SetCol(false);
+        ((Player)character).SetCollLayer(false);
     }
 
     public override State Update()
     {
         if (character.JumpBuffer > 0)
         {
-            ((Player)character).SetCol(true);
+            ((Player)character).SetCollLayer(true);
             return new JumpingState(character);
         }
         else if (!character.IsGrounded)
         {
-            ((Player)character).SetCol(true);
+            ((Player)character).SetCollLayer(true);
             return new FallingState(character);
         }
 
-        character.RB.velocity = new Vector2(rollDir.x * character.MoveSpeed * 2, character.RB.velocity.y);
+        character.RB.velocity = new Vector2(rollDir.x * character.MoveSpeed * 1.5f, -1f);
         if (FinishRoll)
         {
-            ((Player)character).SetCol(true);
+            ((Player)character).SetCollLayer(true);
             return new GroundState(character);
         }
         return base.Update();

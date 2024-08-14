@@ -46,7 +46,7 @@ public class Character : MonoBehaviour
     private void Update()
     {
         transform.rotation = Quaternion.Euler(0, facing, 0);
-        
+
         OnUpdate();
     }
 
@@ -54,9 +54,25 @@ public class Character : MonoBehaviour
     {
         get
         {
-            return Physics2D.CircleCast(transform.position, 0.08f, Vector2.down, GroundCheck, GroundLayer);
+            RaycastHit2D RCast = Physics2D.CircleCast(transform.position, 0.03f, Vector2.down, GroundCheck, GroundLayer);
+
+            if (!RCast.transform) return false;
+
+            if (RCast.normal.magnitude < 0.5f) return false;
+            
+            if (Vector2.Dot(Vector2.up, RCast.normal) < 0.97f) return false;
+            
+            Debug.DrawRay(RCast.point, RCast.normal);
+
+            return true;
         }
     }
+
+    public void ResetJumpBuffer()
+    {
+        JumpBuffer = 0;
+    }
+
 
     public virtual void OnAwake() { }
     public virtual void OnStart() { }
